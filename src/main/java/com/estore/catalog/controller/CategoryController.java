@@ -36,4 +36,12 @@ public class CategoryController {
     public ResponseEntity<CategoryDto> createCategory(@RequestBody CategoryDto categoryDto) {
         return ResponseEntity.ok(catalogService.createCategory(categoryDto));
     }
+
+    @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
+    @Operation(summary = "Delete a category", description = "Delete a category from the system. Restricted to ADMIN users.")
+    public ResponseEntity<Void> deleteCategory(@PathVariable Long id) {
+        catalogService.deleteCategory(id);
+        return ResponseEntity.noContent().build();
+    }
 }

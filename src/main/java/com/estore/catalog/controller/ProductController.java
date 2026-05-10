@@ -48,4 +48,19 @@ public class ProductController {
     public ResponseEntity<ProductDto> createProduct(@RequestBody ProductDto productDto) {
         return ResponseEntity.ok(catalogService.createProduct(productDto));
     }
+
+    @PutMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
+    @Operation(summary = "Update a product", description = "Update an existing product's details. Restricted to ADMIN users.")
+    public ResponseEntity<ProductDto> updateProduct(@PathVariable Long id, @RequestBody ProductDto productDto) {
+        return ResponseEntity.ok(catalogService.updateProduct(id, productDto));
+    }
+
+    @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
+    @Operation(summary = "Delete a product", description = "Delete a product from the catalog. Restricted to ADMIN users.")
+    public ResponseEntity<Void> deleteProduct(@PathVariable Long id) {
+        catalogService.deleteProduct(id);
+        return ResponseEntity.noContent().build();
+    }
 }

@@ -88,6 +88,36 @@ public class CatalogService {
         return convertToProductDto(savedProduct);
     }
 
+    public ProductDto updateProduct(Long id, ProductDto productDto) {
+        Product product = productRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Product not found"));
+
+        product.setName(productDto.getName());
+        product.setDescription(productDto.getDescription());
+        product.setCurrentPrice(productDto.getCurrentPrice());
+        product.setOldPrice(productDto.getOldPrice());
+
+        if (product.getInventory() != null) {
+            product.getInventory().setQuantity(productDto.getStockQuantity());
+        }
+
+        return convertToProductDto(productRepository.save(product));
+    }
+
+    public void deleteProduct(Long id) {
+        if (!productRepository.existsById(id)) {
+            throw new ResourceNotFoundException("Product not found");
+        }
+        productRepository.deleteById(id);
+    }
+
+    public void deleteCategory(Long id) {
+        if (!categoryRepository.existsById(id)) {
+            throw new ResourceNotFoundException("Category not found");
+        }
+        categoryRepository.deleteById(id);
+    }
+
     private CategoryDto convertToCategoryDto(Category category) {
         CategoryDto dto = new CategoryDto();
         dto.setId(category.getId());
